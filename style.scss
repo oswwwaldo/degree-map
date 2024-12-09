@@ -1,0 +1,206 @@
+@import "fonts/fonts.css";
+@import "reset.css";
+
+:root {
+    // Consider adding the year prefix to primary colors and course prefix even/odd colors to be more readable 
+    --primary-blue: #0060A1;
+    --even-blue: #92C8EA;
+    --odd-blue: #C5E0F4;
+
+    --primary-orange: #F58220;
+    --even-orange: #FAAE71;
+    --odd-orange: #FCC89A;
+
+    --base: #0864a4;
+    --white: #fff;
+}
+
+body {
+    padding: 3em;
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    gap: 3em;
+
+    &__logo {
+        display: flex;
+        flex-direction: column;
+
+        font-size: 3em;
+        text-align: center;
+
+        span {
+            color: var(--primary-orange);
+            font-family: 'News Goth Light';
+            font-size: 1em;
+        }
+    }
+
+    &__title {
+        h1 {
+            color: var(--primary-orange);
+            font-family: 'News Goth BT Bold';
+            font-size: 3em;
+            font-weight: bolder;
+            text-transform: uppercase;
+        }
+
+        h2 {
+            color: var(--primary-blue);
+            font-family: 'News Goth Light';
+            font-size: 2em;
+            text-transform: uppercase;
+        }
+    }
+}
+
+main {
+    display: flex;
+    flex-flow: row wrap;
+    gap: 2em;
+    justify-content: center;
+
+    padding: 2em;
+}
+
+.year {
+    display: flex;
+    flex-flow: column nowrap;
+
+    font-family: 'News Goth Light';
+   
+    h1 {
+        padding: 0.2em;
+        background: var(--primary-blue);
+        color: var(--white);
+
+        font-family: 'News Goth BT Bold';
+        font-size: 1.5em;
+        text-align: center;
+        text-transform: uppercase;
+    }
+
+    &__semester {
+        &__header {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.30em;
+
+            width: 100%;
+
+            color: var(--primary-blue);
+            font-size: 1.4em;
+            text-transform: uppercase;
+            &__light { 
+                font-family: 'News Goth Light';
+            }
+
+            &__bold {
+                font-family: 'News Goth BT Bold';
+                font-weight: bolder;
+            }
+        }
+
+        &__course {
+            display: flex;
+            gap: 2em;
+
+            width: 27.875rem;
+            // height: 3.3125rem;
+
+            @mixin course-header {
+                margin-top: 0.5em;
+                margin-bottom: 0.5em;
+                font-size: 1em;
+
+                color: var(--primary-blue);
+            }
+
+            &__code {
+                @include course-header;
+                margin-left: 0.75em;
+                text-transform: uppercase;
+            }
+
+            &__title {
+                @include course-header;
+
+                display: flex;
+                flex-flow: column wrap;
+                letter-spacing: 1px;
+
+                &__credits {
+                    margin-top: 1.25em;
+                    color: white;
+                    font-size: 0.50em;
+                    letter-spacing: 1px;
+                    text-transform: uppercase;
+                }
+            }
+
+            &__credits {
+            }
+        }
+    }
+}
+
+
+.year:nth-child(odd) .year h1{
+    background: var(--primary-blue);
+}
+
+.year:nth-child(odd) .year__semester__course:nth-child(odd) {
+    background: var(--odd-blue);
+}
+
+.year:nth-child(odd) .year__semester__course:nth-child(even) {
+    background: var(--even-blue);
+}
+
+.year:nth-child(even) .year h1{
+    background: var(--primary-orange);
+}
+
+.year:nth-child(even) .year__semester__course:nth-child(odd) {
+    background: var(--odd-orange);
+}
+
+.year:nth-child(even) .year__semester__course:nth-child(even) {
+    background: var(--even-orange);
+}
+
+
+.total-credits {
+    margin-right: 14em;
+    width: 100%;
+
+    font-family: 'News Goth BT Bold';
+    font-size: 1em;
+    text-align: right;
+    text-transform: uppercase;
+}
+
+.footer {
+    &__footnotes {
+    }
+
+    &__site {
+        &__left {
+        }
+
+        &__right {
+        }
+    }
+}
+
+
+.toast {
+    position: fixed;
+    top: 90%; left: 90%;
+    transform: translate(-50%, -50%);
+
+    background: var(--primary-blue);
+    color: var(--white);
+}
