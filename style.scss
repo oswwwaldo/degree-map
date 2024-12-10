@@ -56,6 +56,66 @@ body {
     }
 }
 
+@mixin course-template {
+    display: flex;
+    flex-flow: row nowrap;
+
+    width: 27.875rem;
+    height: 3.3125rem;
+
+    font-family: 'News Goth Light';
+    font-size: 1em;
+}
+
+.course-menu {
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: center;
+
+    &__search-bar {
+
+    }
+    &__results {
+        display: flex;
+        flex-flow: row wrap;
+        padding: 1em;
+
+        &__item {
+            @include course-template;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            
+            width: 33.33%;
+
+            &__code {
+
+            }
+
+            &__title {
+                &__credits {
+
+                }
+            }
+
+
+
+            &--loading {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                gap: 1em;
+            }
+        }
+    }
+
+    &__pagination {
+
+        &--hidden {
+            display: none;
+        }
+    }
+}
+
 main {
     display: flex;
     flex-flow: row wrap;

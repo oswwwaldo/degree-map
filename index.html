@@ -19,16 +19,18 @@
         </div>
     </header>
 
-    <section class="add-menu">
-        <input type="text" id="search" placeholder="Search for a course...">
-        <div class="add-menu__options">
-            <div class="add-menu__options__item loading-cat-placeholder" id="courses">
-                    <img src="https://cataas.com/cat" alt=""> <!--- Incase nothing happens, have a cute pic of a cat. Thanks CATAAS-->
+    <section class="course-menu">
+        <input type="text" class="course-menu__search-bar" id="search" placeholder="Search for a course...">
+
+        <div class="course-menu__results" id="courses">
+            <div class="course-menu__results__item course-menu__results__item--loading">
+                    <img src="https://cataas.com/cat" alt=""> 
+                    <!--- Incase nothing happens, have a cute pic of a cat. Thanks CATAAS-->
                     <h1> Loading... </h1>
                     <h2> In the meantime, why not enjoy our feline friends? </h2>
             </div>
-            <div class="product-section__pagination"></div>
         </div>
+        <div class="course-menu__pagination"></div>
     </section>
 
     <main id="selectedCourses">
