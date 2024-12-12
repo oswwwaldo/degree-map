@@ -143,34 +143,48 @@ function renderMenu(courses) {
 }
 
 async function fetchSearchResults() {
-    const searchInput = document.getElementById("search").value;
+    const searchBtn = document.getElementById("search");
+    const searchInput = searchBtn.value;
+    const resultsContainer = document.getElementById("courses");
     const db = await openDatabase();
     const courses = await getAllCourses(db);
 
+    // If search input is greater than 0, display results container
+    if (searchInput.length > 0) {
+        resultsContainer.style.display = "flex";
+    }
+
+    // Else, hide results container which is the default behavior
+    else {
+        resultsContainer.style.display = "none";
+    }
+
+    const lowerCaseInput = searchInput.toLowerCase();
+
     const searchResults = courses.filter((course) => {
-        return course.longName.toLowerCase().includes(searchInput.toLowerCase());
+        const lowerCaseCode = course.code.toLowerCase();
+        const lowerCaseLongName = course.longName.toLowerCase();
 
-        // For some reason other searches don't work, subjectCode or code comparisons. And performance is really bad thus far.
-        // if (searchInput == course.subjectCode.toLowerCase()) {
-        //     return course.subjectCode.toLowerCase().includes(searchInput.toLowerCase());
-        // }
+        if (lowerCaseCode === lowerCaseInput) {
+            window.alert("Found a match!"); // This code is called repeatedly if highlighting the input after first match is made. Why?
+            return course.code; // Return the matching course.code
+        }
+    
+        else if (lowerCaseLongName.includes(lowerCaseInput)) {
+            return course.longName;
+        }
 
-        // else if (searchInput === course.code.toLowerCase()) {
-        //     return course.code.toLowerCase().includes(searchInput.toLowerCase());
-        // }
-
-        // else if (searchInput.length > 3) {
-        //     return course.longName.toLowerCase().includes(searchInput.toLowerCase());
-        // }
-
-        // else {
-        //     return "Nothing.";
-        // }
+        else {
+            return false;
+        }
     });
-
-    renderMenu(searchResults);
-    if (searchResults.length === 0) {
-        document.getElementById("courses").innerHTML = "<p>No results found.</p>";
+    
+    // If search results returns an item, render menu--else display no results found
+    if (searchResults.length > 0 ) {
+        renderMenu(searchResults);
+    }
+    else {
+        resultsContainer.innerHTML = "<p>No results found.</p>";
     }
 }
 
