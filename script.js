@@ -1,10 +1,3 @@
-/** 
- * Developer: Oswaldo Fabrizio De Los Santos Ascencio
- * EMPLID: 24232142
- * File name: script.js
- * The main script for the degree map website
- */
-
 // Fetch and processes our bmcc-courses.json file
 async function handleJSONFile() {
 
@@ -73,7 +66,7 @@ function storeData(db, data) {
 handleJSONFile();
 
 // Our pagination count 
-let currentPage = 1;
+let currentPage = 1; 
 var itemsPerPage = 9;
 
 // Fetch data from IndexedDB and render courses
@@ -149,10 +142,43 @@ function renderMenu(courses) {
     });
 }
 
-// Render pagination buttons
+async function fetchSearchResults() {
+    const searchInput = document.getElementById("search").value;
+    const db = await openDatabase();
+    const courses = await getAllCourses(db);
+
+    const searchResults = courses.filter((course) => {
+        return course.longName.toLowerCase().includes(searchInput.toLowerCase());
+
+        // For some reason other searches don't work, subjectCode or code comparisons. And performance is really bad thus far.
+        // if (searchInput == course.subjectCode.toLowerCase()) {
+        //     return course.subjectCode.toLowerCase().includes(searchInput.toLowerCase());
+        // }
+
+        // else if (searchInput === course.code.toLowerCase()) {
+        //     return course.code.toLowerCase().includes(searchInput.toLowerCase());
+        // }
+
+        // else if (searchInput.length > 3) {
+        //     return course.longName.toLowerCase().includes(searchInput.toLowerCase());
+        // }
+
+        // else {
+        //     return "Nothing.";
+        // }
+    });
+
+    renderMenu(searchResults);
+    if (searchResults.length === 0) {
+        document.getElementById("courses").innerHTML = "<p>No results found.</p>";
+    }
+}
+
+// Render pagination buttons with data-page attributes for each page
 function renderPaginationButtons(totalPages) {
     const paginationContainer = document.querySelector(".course-menu__pagination");
-    let paginationHTML = "";
+    let paginationHTML = ""; // Our variable storing visible pagination buttons
+    let paginationHTMLQueue = ""; // Our variable storing not visible pagination buttons
 
     for (let i = 1; i <= totalPages; i++) {
 
@@ -160,10 +186,19 @@ function renderPaginationButtons(totalPages) {
             paginationHTML += `<button class='course-menu__pagination__btn' type='button' data-page='${i}'>${i}</button>`;
         }
 
-        else { // Else, hides the rest from view with a class
-            paginationHTML += `<button class='course-menu__pagination__btn 
+        // Else if, shows the last button in the pagination
+        // else if (i === totalPages) 
+
+        else { // Else, hides the rest from view with a --hidden class modifier 
+            paginationHTMLQueue += `<button class='course-menu__pagination__btn 
                                               course-menu__pagination__btn--hidden' type='button' data-page='${i}'>${i}</button>`;
+            
         }
+    }
+
+    // If there are more than 7 pages of pagination buttons, add a "..." button to symbolize the rest
+    if (totalPages > 7) {
+        paginationHTML += `<button class='course-menu__pagination__btn' type='button' data-page='${totalPages}'>...</button>`;
     }
 
     paginationContainer.innerHTML = paginationHTML;

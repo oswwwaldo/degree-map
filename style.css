@@ -47,24 +47,40 @@ body {
 
 .course-menu {
   display: flex;
+  align-items: center;
   flex-flow: column nowrap;
   justify-content: center;
+}
+.course-menu__search-bar {
+  width: 80%;
+  padding: 1em;
+  margin: 1em;
+  border: 2px solid var(--primary-orange);
 }
 .course-menu__results {
   display: flex;
   flex-flow: row wrap;
+  width: 80%;
   padding: 1em;
+  border: 2px solid var(--primary-blue);
 }
 .course-menu__results__item {
   display: flex;
-  flex-flow: row nowrap;
-  width: 27.875rem;
-  height: 3.3125rem;
-  font-family: "News Goth Light";
-  font-size: 1em;
   flex-wrap: wrap;
   justify-content: space-between;
-  width: 33.33%;
+  flex: 100%;
+  margin: 0.5em;
+  font-size: 1em;
+  color: var(--primary-blue);
+}
+.course-menu__results__item__title {
+  text-transform: uppercase;
+}
+.course-menu__results__item__title__credits {
+  display: none;
+}
+.course-menu__results__item__btn {
+  display: none;
 }
 .course-menu__results__item--loading {
   display: flex;

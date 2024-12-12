@@ -20,7 +20,7 @@
     </header>
 
     <section class="course-menu">
-        <input type="text" class="course-menu__search-bar" id="search" placeholder="Search for a course...">
+        <input type="text" class="course-menu__search-bar" id="search" onkeyup="fetchSearchResults(this)" placeholder="Search for a course... ">
 
         <div class="course-menu__results" id="courses">
             <div class="course-menu__results__item course-menu__results__item--loading">
@@ -28,7 +28,31 @@
                     <!--- Incase nothing happens, have a cute pic of a cat. Thanks CATAAS-->
                     <h1> Loading... </h1>
                     <h2> In the meantime, why not enjoy our feline friends? </h2>
+                    <a href="template.html"> </a>
             </div>
+
+            <!-- Course item template ---!
+            <div class="course-menu__results__item" 
+                data-id="${course.id}" 
+                data-name="${course.name}" 
+                data-code="${course.code}" 
+                data-credits="${course.credits.creditHours.max}" 
+                data-departments="${course.departments}">
+
+                <div class="course-menu__results__item__code"> 
+                    ${course.code} 
+                </div>
+                <div class="course-menu__results__item__title"> 
+                    ${course.name}
+                    <span class="course-menu__results__item__title__credits"> 
+                        ${course.credits.creditHours.max} Credits
+                    </span>
+                </div>
+                <button class="course-menu__options__item__btn" type="button">
+                    <i class=fas-fa-plus"></i>
+                </button>
+            </div>
+            <--- Course item template -->
         </div>
         <div class="course-menu__pagination"></div>
     </section>

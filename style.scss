@@ -56,45 +56,98 @@ body {
     }
 }
 
+// @mixin course-template {
+//     display: flex;
+//     background: var(--odd-blue);
+//     color: white;
+//     flex-flow: row nowrap;
+
+//     width: 27.875rem;
+//     height: 3.3125rem;
+
+//     padding: 1em;
+
+//     font-family: 'News Goth Light';
+//     font-size: 1em;
+// }
+
 @mixin course-template {
     display: flex;
-    flex-flow: row nowrap;
-
+    gap: 2em;
     width: 27.875rem;
-    height: 3.3125rem;
 
-    font-family: 'News Goth Light';
-    font-size: 1em;
+    &__code {
+        @include course-header;
+        margin-left: 0.75em;
+        text-transform: uppercase;
+    }
+
+    &__title {
+        @include course-header;
+
+        display: flex;
+        flex-flow: column wrap;
+        letter-spacing: 1px;
+
+        &__credits {
+            margin-top: 1.25em;
+            color: white;
+            font-size: 0.50em;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+    }
+
+    &__credits {
+    }
+    
 }
 
 .course-menu {
     display: flex;
+    align-items: center;
     flex-flow: column nowrap;
     justify-content: center;
 
     &__search-bar {
-
+        width: 80%;
+        padding: 1em;        
+        margin: 1em;
+        border: 2px solid var(--primary-orange);
     }
     &__results {
         display: flex;
         flex-flow: row wrap;
+        width: 80%;
         padding: 1em;
+        border: 2px solid var(--primary-blue);
 
         &__item {
-            @include course-template;
+            display: flex;
             flex-wrap: wrap;
             justify-content: space-between;
+
+            // flex: 1 1 17.875rem;
+            flex: 100%;
+            margin: 0.5em;
+
+            font-size: 1em;
+            color: var(--primary-blue);
             
-            width: 33.33%;
 
             &__code {
 
             }
 
             &__title {
+                text-transform: uppercase;
                 &__credits {
-
+                    display: none;
                 }
+            }
+
+            &__btn {
+                display: none;
             }
 
 
