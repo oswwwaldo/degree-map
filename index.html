@@ -6,6 +6,7 @@
     <title> BMCC Academic Degree Map Builder </title>
     <link rel="stylesheet" href="style.css">
     <script src="script.js"></script>
+    <script src="https://kit.fontawesome.com/217b2b6fbc.js" crossorigin="anonymous"></script>
 </head>
 <body>
     <header class="header">
@@ -19,8 +20,43 @@
         </div>
     </header>
 
+    <article class="intro">
+        <h1> Welcome to the BMCC Academic Degree Map Builder </h1>
+        <p> Academic degree maps outline course sequencing and provide students a visual roadmap whilst on their quest to 
+            complete the degrees offered at BMCC. </p>
+        <p> 
+            This tool is designed to help you visualize your academic progress and plan your degree. 
+            You can search for courses, add them to your degree map, and organize them by semester. 
+            You can also export your degree map as a PDF and share it with your advisor. 
+            This is a student-made resource and in no way is meant to replace official academic advising.
+        </p>
+    </article>
+
+    <!-- Conceptual -->
+    <aside class="side-menu">
+        <ul>
+            <li> About this page </li>
+        </ul>
+        <header class="side-menu__header">
+            <h1> More options and resources </h1>
+        </header> 
+        <ul>
+            <li> Export as PDF <i class="fas fa-file"></i> </li>
+            <li> Share with advisor <i class="fas fa-share-from-square"></i> </li>
+            <li> <a href=""> Official Degree Maps </a> </li>
+            <li> CUNYfirst Schedule Builder </li>
+            <li> Academic departments </li>
+            <li> Academic calendar </li>
+            <li> Course listings </li>
+        </ul>
+    </aside>
+
     <section class="course-menu">
-        <input type="text" class="course-menu__search-bar" id="search" onkeyup="fetchSearchResults(this)" placeholder="Search for a course... ">
+        <input type="text" 
+                class="course-menu__search-bar" 
+                id="search" 
+                onkeyup="fetchSearchResults(this)" 
+                placeholder="Search for a course..."> 
 
         <div class="course-menu__results" id="courses">
             <div class="course-menu__results__item course-menu__results__item--loading">
@@ -59,7 +95,7 @@
 
     <main id="selectedCourses">
         <section class="year">
-            <h1> Year 1 </h1>
+            <h1 class="year__header"> Year 1 </h1>
 
             <section class="year__semester">
                 <h2 class="year__semester__header">
@@ -140,7 +176,7 @@
         </section>
 
         <section class="year">
-            <h1> Year 2 </h1>
+            <h1 class="year__header"> Year 2 </h1>
 
             <section class="year__semester">
                 <h2 class="year__semester__header">
@@ -266,24 +302,42 @@
 
     <footer class="footer">
 
-        <article class="footer__footnotes"> 
-            <textarea> 
-                <h1> Footnotes </h1>
-                <p> 1. This is a footnote. </p>
-                <p> 2. This is another footnote. </p>
-            </textarea>
-        </article>
+        <div class="footer__footnotes">
+            <h1 class="footer__footnotes__header"> 
+                <i class="fas fa-paw"> </i> <span contenteditable="true"> Footnotes </span> <i class="fas fa-pencil"> </i>
+            </h1>
+            <ul class="footer__footnotes__list">
+                <li class="footer__footnotes__list__item"contenteditable="true"> ACC 122 is the prerequisite course to all ACC courses and it should be taken in the first semester. </li>
+                <li class="footer__footnotes__list__item"contenteditable="true"> MAT 206.5 is an alternative option. MAT 206.5 is a combination course of Intermediate Algebra and Trigonometry and Precalculus and will satisfy the 
+                    Mathematical & Quantitative Requirement. </li>
+                <li class="footer__footnotes__list__item"contenteditable="true"> ECO 202 is an alternative option. MAT 206.5 is a prerequisite for this course.  </li>
+                <li class="footer__footnotes__list__item"contenteditable="true"> Please consult with an academic or faculty advisor.  </li>
+            </ul>
+            <p class="footer__footnotes__paragraph"contenteditable="true"> Add a new footnote </p>
+        </div>  
+
         <div class="footer__site">
             <div class="footer__site__left">
-                <p> Warning: Not endorsed or affiliated with BMCC. Student-made utility and proof-of-concept. Contents of this website can be misleading
-                    or inaccurate and should always be independently verified through the school. 
-                </p>
+                <button class="footer__site__left__btn" onclick="revealDropdownContent(this)"> 
+                    <p> 
+                        <strong> 
+                            Disclaimer: Not endoresd or affiliated with the Borough of Manhattan Community College. 
+                            <i class="fas fas fa-chevron-down"></i>
+                        </strong> 
+                    </p>
+                </button>
+                <div class="footer__site__left__content">
+                    <p>
+                        This is a student-made project and should not be used as a replacement for official academic advising, simply as a self-guided tool to visualize academic progress. 
+                        Contents of this website can be misleading or inaccurate and should always be independently verified through the school.
+                    </p>
+                </div>
             </div>
             <div class="footer__site__right">
                 <p> Designed & Built by Oswaldo Fabrizio Ascencio De Los Santos </p>
+                <p> You can reach me <a href="mailto:ofdlsa@outlook.com"> here.</a>
             </div>
         </div>
-            
     </footer>
 </body>
 </html>

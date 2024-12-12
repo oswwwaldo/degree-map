@@ -9,6 +9,7 @@
   --odd-orange: #FCC89A;
   --base: #0864a4;
   --white: #fff;
+  --menu-width: 50%;
 }
 
 body {
@@ -52,7 +53,7 @@ body {
   justify-content: center;
 }
 .course-menu__search-bar {
-  width: 80%;
+  width: var(--menu-width);
   padding: 1em;
   margin: 1em;
   border: 2px solid var(--primary-orange);
@@ -60,15 +61,17 @@ body {
 .course-menu__results {
   display: flex;
   flex-flow: row wrap;
-  width: 80%;
-  padding: 1em;
+  width: var(--menu-width);
   border: 2px solid var(--primary-blue);
+  display: none; /*/ Default behavior is to hide the results until a search is made /*/
 }
 .course-menu__results__item {
   display: flex;
+  align-items: center;
   flex-wrap: wrap;
   justify-content: space-between;
   flex: 100%;
+  padding: 0.5em;
   margin: 0.5em;
   font-size: 1em;
   color: var(--primary-blue);
@@ -80,7 +83,9 @@ body {
   display: none;
 }
 .course-menu__results__item__btn {
-  display: none;
+  padding: 1em;
+  background: transparent;
+  border: transparent;
 }
 .course-menu__results__item--loading {
   display: flex;
@@ -88,8 +93,31 @@ body {
   align-items: center;
   gap: 1em;
 }
+.course-menu__results__item:hover {
+  background: var(--primary-blue);
+  color: var(--white);
+}
+.course-menu__pagination {
+  display: none; /*/ Default behavior is to hide the results until a search is made /*/
+}
+.course-menu__pagination__btn {
+  padding: 1em;
+  margin: 0.5em;
+  background: transparent;
+  border: 2px solid var(--primary-orange);
+}
 .course-menu__pagination--hidden {
   display: none;
+}
+
+.intro {
+  font-family: "News Goth Light";
+  letter-spacing: 1px;
+  margin: 1em 0;
+}
+
+.side-menu {
+  position: absolute;
 }
 
 main {
@@ -183,13 +211,83 @@ main {
   background: var(--even-orange);
 }
 
+.year:first-of-type .year__header {
+  border-top-left-radius: 20px;
+}
+
+.year:last-of-type .year__header {
+  border-top-right-radius: 20px;
+}
+
+.year:first-of-type .year__semester:last-of-type .year__semester__course:last-of-type {
+  border-bottom-left-radius: 20px;
+}
+
+.year:last-of-type .year__semester:last-of-type .year__semester__course:last-of-type {
+  border-bottom-right-radius: 20px;
+}
+
 .total-credits {
-  margin-right: 14em;
+  position: relative;
+  right: 13em;
   width: 100%;
   font-family: "News Goth BT Bold";
-  font-size: 1em;
+  font-size: 1.1em;
+  color: var(--primary-orange);
   text-align: right;
   text-transform: uppercase;
+}
+
+.footer {
+  display: flex;
+  flex-flow: column nowrap;
+}
+.footer__footnotes {
+  margin: 1em;
+}
+.footer__footnotes h1 {
+  color: var(--primary-blue);
+  font-family: "News Goth BT Bold";
+  font-size: 1.5em;
+  text-transform: uppercase;
+}
+.footer__footnotes__list {
+  font-family: "News Goth Light";
+  font-size: 0.9em;
+  letter-spacing: 1px;
+  color: var(--primary-blue);
+  list-style-position: outside;
+  list-style-type: decimal;
+  margin: 1em;
+}
+.footer__footnotes__list__item {
+  margin: 0.3em;
+}
+.footer__footnotes__list__item::marker {
+  font-size: xx-small;
+}
+.footer__footnotes__paragraph {
+  font-family: "News Goth Light";
+  font-size: 1em;
+  color: var(--even-blue);
+}
+.footer__site {
+  display: flex;
+  flex-flow: row;
+  justify-content: space-around;
+  padding: 1em;
+  font-family: Arial, Helvetica, sans-serif;
+  background: var(--primary-blue);
+  color: white;
+}
+.footer__site__left {
+  flex: 0 0 50%;
+}
+.footer__site__left p strong {
+  color: white;
+}
+.footer__site__right {
+  text-align: right;
 }
 
 .toast {

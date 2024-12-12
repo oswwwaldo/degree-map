@@ -76,7 +76,7 @@ async function fetchAndRenderCourses() {
 
     // Calculate pagination details
     const totalCourses = courses.length;
-    const totalPages = Math.ceil(totalCourses / itemsPerPage);
+    const totalPages = Math.ceil(totalCourses / itemsPerPage); 
     const startIndex = (currentPage - 1) * itemsPerPage;
     const endIndex = Math.min(startIndex + itemsPerPage, totalCourses);
     const paginatedCourses = courses.slice(startIndex, endIndex);
@@ -124,7 +124,7 @@ function renderMenu(courses) {
                         ${course.credits.creditHours.max} Credits
                     </span>
                     <button class="course-menu__results__item__btn" type="button">
-                        <i class=fas-fa-plus"></i>
+                        <i class="fab fa-plus"></i>
                     </button>
                 </div>
             </div>`;
@@ -238,6 +238,9 @@ function createPaginationButton(direction, label) {
 // let selectedCourses = [];
 // document.getElementById("selected-courses").innerHTML = "";
 
+let mapCourses = JSON.parse(localStorage.getItem("mapCourses")) || [];
+let mapHTML = "";
+
 // Add item to cart
 function addToMap(courseCard) {
     const course = {
@@ -247,10 +250,11 @@ function addToMap(courseCard) {
         departments: courseCard.dataset.departments,
     };
 
-    selectedCourses.push(course);
-    createToast(`Added ${course.name} to the cart.`);
+    mapCourses.push(course);
+    // localStorage.setItem("mapCourses", JSON.stringify(mapCourses));
+    createToast(`Added ${course.longName} to the cart.`);
 
-    selectedCourses += `
+    mapHTML += `
         <div class="course-menu__results__item">
             <div class="course-menu__results__item__code"> ${course.code} </div>
             <div class="course-menu__results__item__title"> 
@@ -261,9 +265,9 @@ function addToMap(courseCard) {
             </div>
         </div>`;  
         
-    console.log(selectedCourses)
+    console.log(mapCourses);
 
-    document.getElementById("selected-courses").innerHTML = selectedCourses;
+    document.getElementById("selected-courses").innerHTML += mapHTML;
 
     // if (selectedCourses.firstChild != document.getElementById("year")) {
     //     document.createElement("div").setAttribute("id", "year");

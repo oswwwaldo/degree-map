@@ -13,6 +13,8 @@
 
     --base: #0864a4;
     --white: #fff;
+
+    --menu-width: 50%;
 }
 
 body {
@@ -110,7 +112,7 @@ body {
     justify-content: center;
 
     &__search-bar {
-        width: 80%;
+        width: var(--menu-width);
         padding: 1em;        
         margin: 1em;
         border: 2px solid var(--primary-orange);
@@ -118,17 +120,20 @@ body {
     &__results {
         display: flex;
         flex-flow: row wrap;
-        width: 80%;
-        padding: 1em;
+        width: var(--menu-width);
         border: 2px solid var(--primary-blue);
+
+        display: none; /*/ Default behavior is to hide the results until a search is made /*/
 
         &__item {
             display: flex;
+            align-items: center;
             flex-wrap: wrap;
             justify-content: space-between;
 
             // flex: 1 1 17.875rem;
             flex: 100%;
+            padding: 0.5em;
             margin: 0.5em;
 
             font-size: 1em;
@@ -147,7 +152,15 @@ body {
             }
 
             &__btn {
-                display: none;
+                padding: 1em;
+                background: transparent;
+                border: transparent;
+                // display: none;
+
+                &::after {
+                    // content: "+";
+                    // color: black;
+                }
             }
 
 
@@ -158,15 +171,38 @@ body {
                 align-items: center;
                 gap: 1em;
             }
+
+            &:hover {
+                background: var(--primary-blue);
+                color: var(--white);
+            }
         }
     }
 
     &__pagination {
+        display: none; /*/ Default behavior is to hide the results until a search is made /*/
+
+        &__btn {
+            padding: 1em;
+            margin: 0.5em;
+            background: transparent;
+            border: 2px solid var(--primary-orange);
+        }
 
         &--hidden {
             display: none;
         }
     }
+}
+
+.intro {
+    font-family: 'News Goth Light';
+    letter-spacing: 1px;
+    margin: 1em 0;
+}
+.side-menu {
+    position: absolute;
+
 }
 
 main {
@@ -284,27 +320,117 @@ main {
     background: var(--even-orange);
 }
 
+// Rounds the top left corner of the first year's header
+.year:first-of-type .year__header {
+    border-top-left-radius: 20px;
+}
+
+// Rounds the top left corner of the last year's header
+.year:last-of-type .year__header {
+    border-top-right-radius: 20px;
+}
+
+// Rounds the bottom left corner of the last course in the very first semester 
+.year:first-of-type .year__semester:last-of-type .year__semester__course:last-of-type {
+    border-bottom-left-radius: 20px;
+}
+
+// Rounds the bottom right corner of the last course in the very last semester 
+.year:last-of-type .year__semester:last-of-type .year__semester__course:last-of-type {
+    border-bottom-right-radius: 20px;
+}
+
 
 .total-credits {
-    margin-right: 14em;
+    position: relative;
+    right: 13em;
+    // margin-right: 14em;
     width: 100%;
 
     font-family: 'News Goth BT Bold';
-    font-size: 1em;
+    font-size: 1.10em;
+
+    color: var(--primary-orange);
+
     text-align: right;
     text-transform: uppercase;
 }
 
 .footer {
+    display: flex;
+    flex-flow: column nowrap;
+
     &__footnotes {
+        margin: 1em;
+
+        h1 {
+            color: var(--primary-blue);
+            font-family: 'News Goth BT Bold';
+            font-size: 1.5em;
+            text-transform: uppercase;
+        }
+
+        &__list {
+            font-family: 'News Goth Light';	
+            font-size: 0.90em;
+            letter-spacing: 1px;
+
+            color: var(--primary-blue);
+            list-style-position: outside;
+            list-style-type: decimal;
+
+            margin: 1em;
+            
+            &__item {
+                margin: 0.3em;
+                &::marker {
+                    font-size: xx-small;
+                }
+            }
+        }
+
+        &__paragraph {
+            font-family: 'News Goth Light';
+            font-size: 1em;
+            color: var(--even-blue);
+        }
+
     }
 
     &__site {
+        display: flex;
+        flex-flow: row;
+        justify-content: space-around;
+
+        padding: 1em;
+
+        font-family:Arial, Helvetica, sans-serif;
+
+        background: var(--primary-blue);
+        color: white;
+
         &__left {
+            flex: 0 0 50%;
+
+            &__btn {
+                padding: 1em;
+                background: transparent;
+                border: transparent;
+                color: white;
+            }
+
+            & p {
+                & strong {
+                    color: white;
+                }
+            }
         }
 
         &__right {
+            // flex: 0 0 50%;
+            text-align: right;
         }
+
     }
 }
 
