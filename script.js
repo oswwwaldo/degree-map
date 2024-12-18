@@ -338,7 +338,48 @@ handleJSONFile().then(() => {
     fetchAndRenderCourses();
 });
 
+//TODO Function should dynamcially calculate the credits for each semester and return the year range of expected completion
+function calculateMapYearRange() {
+    let yearRange = document.getElementById("yearRange").innerText;
+}
+
+
+
+
+
+let creditsMap = [];
+
+//TODO Dynamically named semesters and years
 document.addEventListener("DOMContentLoaded", function() {
+
+    //TODO Dynamically create semester variable names and dynmaically name each semester based on their position in the index
+    // Create a map to store semester data
+
+    // Select all semester elements
+    document.querySelectorAll(".year__semester").forEach((semester, index) => {
+
+        // Get the number of credits
+        let innerTextStr = semester.querySelector(".year__semester__header__light").innerText;
+        let credits = parseInt(innerTextStr) || 0;
+
+        // Get the semester's position (assuming the semester name is stored as class or text)
+        // let semesterPosition = semester.querySelector(".semester-position").innerText || "Unknown";  // Adjust selector
+
+        // Get the year of the semester (assuming it's a parent container or specific element)
+        let semesterYear = semester.querySelector(".semester-year") ? 
+                        semester.querySelector(".semester-year").innerText : "Unknown";  // Adjust selector
+
+        // Push this information to the map
+        creditsMap.push({
+            element: semester,
+            credits: credits,
+            // position: semesterPosition,
+            year: semesterYear,
+            semesterIndex: index + 1 // Position in the year (1 for first semester, 2 for second, etc.)
+        });
+    });
+
+    console.log(creditsMap);
     
     // Adds drag and drop for courses in between semesters using dynamically generated IDs and the dataTransfer object 
     document.querySelectorAll(".year__semester__course").forEach((course, index) => {
@@ -379,31 +420,25 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 
 
-
+    //! Problem. The issue is when we delete a course, the total is messed up. ===
     // Delete courses from the semester
     document.querySelectorAll(".year__semester__course__btns__remove-btn").forEach((btn) => {
         btn.addEventListener("click", function() {
             const semester = btn.closest(".year__semester");
             const course = btn.closest(".year__semester__course");
             course.remove();
+            console.log("Course (" + course.id + ") removed from semester");
             calculateCredits(semester);
         });
     });
 
 });
 
-//TODO Dynamically create semester variable names and dynmaically name each semester based on their position in the index
-let semesterCreditsMap = {};
-document.querySelectorAll(".year__semester").forEach((semester, index) => {
-    semesterCreditsMap[`semester${index}Credits`] = semester.querySelector(".year__semester__course__title__credits").innerText;
-});
-console.log(semesterCreditsMap);
+
 
 //TODO Function should also take an optional previousSemester parameter to calculate the credits for that semester too
 //TODO Function should take into account that other semesters have their own credits variables and not continually modify the global total 
 function calculateCredits(semester) {
-
-    totalCredits = 0; // Resets the total credits count 
 
     // If a semester is passed into the function, calculate the credits for that semester
     if (semester) {
@@ -411,32 +446,39 @@ function calculateCredits(semester) {
         calculateSemesterCredits(semester);
 
         // Checks to see if semester still has courses left, if not then it will delete the semester
-        if (totalCredits <= 0 ) {
-            window.alert("Semester has been deleted.")
+        if (semesterCredits <= 0 ) {
+            window.alert("Semester has been deleted.");
             semester.remove();
         }
 
-        // Updates the total credits for the semester
-        else {
-            semester.querySelector(".year__semester__header__light").innerText = totalCredits + " Credits";
-        }
+        // Updates the total credits for the year
+        // document.getElementById("totalCredits").innerText = "Total: " + totalCredits + " Credits";
     }
 
     // If no semester is passed into the function, calculate the credits for all semesters
     else if (!semester) {
         console.log("No semester is passed into calculateCredits()");
+        totalCredits = 0; // Resets the total credits count
 
         document.querySelectorAll(".year__semester").forEach((semester) => {
             calculateSemesterCredits(semester);
         });
-
-        document.getElementById("totalCredits").innerText = "Total: " + totalCredits + " Credits";
     }
 
     function calculateSemesterCredits(semester) {
+        semesterCredits = 0; // Resets the semester credits count
+
         semester.querySelectorAll(".year__semester__course").forEach((course) => {
-            let credits = course.querySelector(".year__semester__course__title__credits").innerText;
-            totalCredits += parseInt(credits);
+            let courseCredits = parseInt(course.querySelector(".year__semester__course__title__credits").innerText);
+
+            semesterCredits += courseCredits; // Adds all of our course credits together
         });
+
+        console.log(semesterCredits + " is how many semesterCredits we have");
+        semester.querySelector(".year__semester__header__light").innerText = semesterCredits + " Credits";
+
+        totalCredits += semesterCredits; // Updates the total credits count
+        console.log(totalCredits + " is how many totalCredits we have");
+        document.getElementById("totalCredits").innerText = "Total: " + totalCredits + " Credits";
     }
 }
