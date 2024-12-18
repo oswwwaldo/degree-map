@@ -1,9 +1,32 @@
+
+// BMCC Degree Map Builder - script.js //
+
+// === TABLE OF CONTENTS ===                                            //
+// 1 | Create JSON file database                                        //
+//   => 1.1 | func handleJSONFile(json)                                 //
+//   => 1.2 | func openDatabase()                                       //
+//   => 1.3 | func storeData(db, data)                                  //
+//   => 1.4 | func getAllCourses(db)                                    //
+
+// 2 | Render database in HTML                                          //
+//   => 2.1 | func fetchAndRenderCourses()                              //
+//   => 2.2 | func getAllCourses(db)                                    //
+//   => 2.3 | func renderMenu(courses)                                  //
+
+
+// 2 | Render in course menu                                            //
+// 3 | Search for courses                                               //
+// 4 | Pagination buttons                                               //
+// 5 | Add to cart                                                      //
+// 6 | Create toast message                                             //
+// ==========================                                           //
+
 // Fetch and processes our bmcc-courses.json file
 async function handleJSONFile() {
-
-    // .json file was collected through the course dog API via the network request made at https://bmcc.catalog.cuny.edu/courses
+    
     try {
-        const response = await fetch("bmcc-courses.json");  
+        const response = await fetch('bmcc-courses.json'); 
+        // .json file was collected through the course dog API via the network request made at https://bmcc.catalog.cuny.edu/courses
 
         // If no response, then error thrown
         if (!response.ok) { 
@@ -62,6 +85,23 @@ function storeData(db, data) {
     });
 }
 
+// Get all courses from IndexedDB
+function getAllCourses(db) {
+    return new Promise((resolve, reject) => {
+        const transaction = db.transaction("items", "readonly");
+        const store = transaction.objectStore("items");
+        const request = store.getAll();
+
+        request.onsuccess = (e) => {
+            resolve(e.target.result);
+        };
+
+        request.onerror = (e) => {
+            reject(e.target.error);
+        };
+    });
+}
+
 // Call the function to handle the JSON file
 handleJSONFile();
 
@@ -83,23 +123,7 @@ async function fetchAndRenderCourses() {
 
     renderMenu(paginatedCourses);
     renderPaginationButtons(totalPages);
-}
-
-// Get all courses from IndexedDB
-function getAllCourses(db) {
-    return new Promise((resolve, reject) => {
-        const transaction = db.transaction("items", "readonly");
-        const store = transaction.objectStore("items");
-        const request = store.getAll();
-
-        request.onsuccess = (e) => {
-            resolve(e.target.result);
-        };
-
-        request.onerror = (e) => {
-            reject(e.target.error);
-        };
-    });
+    calculateCredits();
 }
 
 // Render the course menu
@@ -109,12 +133,7 @@ function renderMenu(courses) {
     courses.forEach((course) => {
         courseList += `
             <div class="course-menu__results__item" 
-                data-id="${course.id}" 
-                data-name="${course.name}" 
-                data-code="${course.code}" 
-                data-credits="${course.credits.creditHours.max}" 
-                data-departments="${course.departments}">
-
+                data-id=${course.id}>
                 <div class="course-menu__results__item__code"> 
                     ${course.code} 
                 </div>
@@ -130,60 +149,84 @@ function renderMenu(courses) {
             </div>`;
     });
 
+    // Keeps the data-attributes format
+    // courses.forEach((course) => {
+    //     courseList += `
+    //         <div class="course-menu__results__item" 
+    //             data-id="${course.id}" 
+    //             data-name="${course.name}" 
+    //             data-code="${course.code}" 
+    //             data-credits="${course.credits.creditHours.max}" 
+    //             data-departments="${course.departments}">
+
+    //             <div class="course-menu__results__item__code"> 
+    //                 ${course.code} 
+    //             </div>
+    //             <div class="course-menu__results__item__title"> 
+    //                 ${course.name}
+    //                 <span class="course-menu__results__item__title__credits"> 
+    //                     ${course.credits.creditHours.max} Credits
+    //                 </span>
+    //                 <button class="course-menu__results__item__btn" type="button">
+    //                     <i class="fab fa-plus"></i>
+    //                 </button>
+    //             </div>
+    //         </div>`;
+    // });
+
     // Adds in our courses as HTML to 'course-menu__results' div, which is the main container for our courses
+   
     document.getElementById("courses").innerHTML = courseList;
 
-    // Add event listeners for each button for click interactivity 
-    document.querySelectorAll(".course-menu__results__item__btn").forEach((btn) => {
-        btn.addEventListener("click", function (event) {
-            event.stopPropagation();
-            addToMap(btn.closest(".course-menu__results__item"));
-        });
+
+
+    // Add event listeners for each button for click interactivity with a single event listener to the parent container
+    document.getElementById("courses").addEventListener("click", function (event) {
+
+        const element = event.target.closest(".course-menu__results__item");
+
+        if (element) {
+            const courseId = element.getAttribute("data-id");
+            const course = courses.find(course => course.id === courseId);
+            console.log(course.name + " was clicked.");
+            addToMap(course);
+        }
     });
+
 }
 
 async function fetchSearchResults() {
     const searchBtn = document.getElementById("search");
-    const searchInput = searchBtn.value;
+    const searchInput = searchBtn.value.trim();
     const resultsContainer = document.getElementById("courses");
-    const db = await openDatabase();
-    const courses = await getAllCourses(db);
 
-    // If search input is greater than 0, display results container
-    if (searchInput.length > 0) {
-        resultsContainer.style.display = "flex";
-    }
-
-    // Else, hide results container which is the default behavior
-    else {
-        resultsContainer.style.display = "none";
+    // If there is input, display results container
+    resultsContainer.style.display = searchInput.length > 0 ? "flex" : "none";
+    
+    if (searchInput.length === 0) {
+        return; // If no search input, exit early to avoid unnecessary processing
     }
 
     const lowerCaseInput = searchInput.toLowerCase();
+    const db = await openDatabase();
+    const courses = await getAllCourses(db);
 
     const searchResults = courses.filter((course) => {
         const lowerCaseCode = course.code.toLowerCase();
         const lowerCaseLongName = course.longName.toLowerCase();
 
-        if (lowerCaseCode === lowerCaseInput) {
-            window.alert("Found a match!"); // This code is called repeatedly if highlighting the input after first match is made. Why?
-            return course.code; // Return the matching course.code
-        }
-    
-        else if (lowerCaseLongName.includes(lowerCaseInput)) {
-            return course.longName;
-        }
+        // Checks if course.code is a direct match or if course.longName contains the search input
+        const isCodeMatch = lowerCaseCode === lowerCaseInput;
+        const isLongNameMatch = lowerCaseLongName.includes(lowerCaseInput);
 
-        else {
-            return false;
-        }
+        // Return the course object if either condition matches
+        return isCodeMatch || isLongNameMatch;
     });
-    
-    // If search results returns an item, render menu--else display no results found
-    if (searchResults.length > 0 ) {
+
+    // Render results or show no results found
+    if (searchResults.length > 0) {
         renderMenu(searchResults);
-    }
-    else {
+    } else {
         resultsContainer.innerHTML = "<p>No results found.</p>";
     }
 }
@@ -217,6 +260,16 @@ function renderPaginationButtons(totalPages) {
 
     paginationContainer.innerHTML = paginationHTML;
 
+    // Create a pagination button
+    function createPaginationButton(direction, label) {
+        const button = document.createElement("button");
+        button.className = "course-menu__pagination__btn";
+        button.type = "button";
+        button.setAttribute("data-direction", direction);
+        button.innerHTML = label;
+        return button;
+    }
+
     // Add navigation buttons
     paginationContainer.prepend(createPaginationButton("previous", "&LeftArrow; Previous"));
     paginationContainer.appendChild(createPaginationButton("next", "&RightArrow; Next"));
@@ -239,16 +292,6 @@ function renderPaginationButtons(totalPages) {
     });
 }
 
-// Create a pagination button
-function createPaginationButton(direction, label) {
-    const button = document.createElement("button");
-    button.className = "course-menu__pagination__btn";
-    button.type = "button";
-    button.setAttribute("data-direction", direction);
-    button.innerHTML = label;
-    return button;
-}
-
 // let selectedCourses = [];
 // document.getElementById("selected-courses").innerHTML = "";
 
@@ -256,38 +299,25 @@ let mapCourses = JSON.parse(localStorage.getItem("mapCourses")) || [];
 let mapHTML = "";
 
 // Add item to cart
-function addToMap(courseCard) {
-    const course = {
-        id: courseCard.dataset.id,
-        name: courseCard.dataset.name,
-        code: courseCard.dataset.code,
-        departments: courseCard.dataset.departments,
-    };
+function addToMap(course) {
 
     mapCourses.push(course);
-    // localStorage.setItem("mapCourses", JSON.stringify(mapCourses));
     createToast(`Added ${course.longName} to the cart.`);
 
     mapHTML += `
-        <div class="course-menu__results__item">
-            <div class="course-menu__results__item__code"> ${course.code} </div>
-            <div class="course-menu__results__item__title"> 
+        <div class="year__semester__course">
+            <div class="year__semester__course__code"> ${course.code} </div>
+            <div class="year__semester__course__title"> 
                 ${course.name} 
-                <span class="course-menu__results__item__title__credits"> 
-                    ${course.credits}
+                <span class="year__semester__course__title__credits"> 
+                    ${course.credits} Credits
                 </span>
             </div>
-        </div>`;  
+        </div>`;
         
     console.log(mapCourses);
 
-    document.getElementById("selected-courses").innerHTML += mapHTML;
-
-    // if (selectedCourses.firstChild != document.getElementById("year")) {
-    //     document.createElement("div").setAttribute("id", "year");
-    // }
-    //     document.getElementById("selected-courses").classList.add("active");
-
+    document.getElementById("selectedCourses").innerHTML += mapHTML;
 }
 
 // Creates a toast message temporarily and then deletes after timeout
@@ -307,3 +337,106 @@ function createToast(message){
 handleJSONFile().then(() => {
     fetchAndRenderCourses();
 });
+
+document.addEventListener("DOMContentLoaded", function() {
+    
+    // Adds drag and drop for courses in between semesters using dynamically generated IDs and the dataTransfer object 
+    document.querySelectorAll(".year__semester__course").forEach((course, index) => {
+        course.addEventListener('dragstart', function(e) {
+            e.dataTransfer.setData("text/plain", course.id); // Set the course ID in the DataTransfer object
+            console.log("Drag started for:", course.id);
+        });
+
+        if (!course.id) {
+            course.id = `course-${index}`;
+        }
+    });    
+
+    document.querySelectorAll(".year__semester").forEach((semester) => {
+
+        semester.addEventListener('dragover', function(e) {
+            e.preventDefault(); // Prevent the default behavior of the browser
+            console.log("Drag over");
+        });
+
+        // Drop the course into the semester
+        semester.addEventListener('drop', function(e) {
+            e.preventDefault(); // Prevent the default behavior of the browser
+            const courseId = e.dataTransfer.getData("text/plain"); // Retrieve the course ID
+            const course = document.getElementById(courseId); // Find the course element by ID
+            if (course) { // If the course element exists
+                semester.append(course); // Move the course element to the semester
+                console.log("Dropped:", courseId, "into semester");
+            } else { // If the course element does not exist, throw an error
+                console.error("Dropped course not found");
+            }
+
+            //TODO calculateCredits(previousSemester); previous semester functionality needs to be calculated 
+            calculateCredits(semester);
+        });
+
+        //TODO Add out of bounds drop functionality for courses that are dropped outside of the semester element
+    });
+
+
+
+    // Delete courses from the semester
+    document.querySelectorAll(".year__semester__course__btns__remove-btn").forEach((btn) => {
+        btn.addEventListener("click", function() {
+            const semester = btn.closest(".year__semester");
+            const course = btn.closest(".year__semester__course");
+            course.remove();
+            calculateCredits(semester);
+        });
+    });
+
+});
+
+//TODO Dynamically create semester variable names and dynmaically name each semester based on their position in the index
+let semesterCreditsMap = {};
+document.querySelectorAll(".year__semester").forEach((semester, index) => {
+    semesterCreditsMap[`semester${index}Credits`] = semester.querySelector(".year__semester__course__title__credits").innerText;
+});
+console.log(semesterCreditsMap);
+
+//TODO Function should also take an optional previousSemester parameter to calculate the credits for that semester too
+//TODO Function should take into account that other semesters have their own credits variables and not continually modify the global total 
+function calculateCredits(semester) {
+
+    totalCredits = 0; // Resets the total credits count 
+
+    // If a semester is passed into the function, calculate the credits for that semester
+    if (semester) {
+        console.log("Semester is passed into calculateCredits()");
+        calculateSemesterCredits(semester);
+
+        // Checks to see if semester still has courses left, if not then it will delete the semester
+        if (totalCredits <= 0 ) {
+            window.alert("Semester has been deleted.")
+            semester.remove();
+        }
+
+        // Updates the total credits for the semester
+        else {
+            semester.querySelector(".year__semester__header__light").innerText = totalCredits + " Credits";
+        }
+    }
+
+    // If no semester is passed into the function, calculate the credits for all semesters
+    else if (!semester) {
+        console.log("No semester is passed into calculateCredits()");
+
+        document.querySelectorAll(".year__semester").forEach((semester) => {
+            calculateSemesterCredits(semester);
+        });
+
+        document.getElementById("totalCredits").innerText = "Total: " + totalCredits + " Credits";
+    }
+
+    function calculateSemesterCredits(semester) {
+        semester.querySelectorAll(".year__semester__course").forEach((course) => {
+            let credits = course.querySelector(".year__semester__course__title__credits").innerText;
+            totalCredits += parseInt(credits);
+        });
+    }
+}

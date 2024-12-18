@@ -46,6 +46,28 @@ body {
   text-transform: uppercase;
 }
 
+.intro {
+  height: 1px;
+  opacity: 0;
+  transition: 500ms ease-in;
+}
+.intro:hover {
+  height: 100px;
+  opacity: 1;
+}
+
+.side-menu__header {
+  padding: 1em;
+  font-size: 1.5em;
+  border-bottom: 2px solid var(--primary-blue);
+}
+.side-menu__list {
+  padding: 1em;
+}
+.side-menu__list li {
+  margin: 1em;
+}
+
 .course-menu {
   display: flex;
   align-items: center;
@@ -187,6 +209,21 @@ main {
   letter-spacing: 1px;
   text-transform: uppercase;
 }
+.year__semester__course__btns {
+  display: flex;
+  flex-direction: row-reverse;
+  opacity: 0;
+  padding: 1em;
+}
+.year__semester__course__btns button {
+  background: transparent;
+  border: transparent;
+  color: var(--primary-blue);
+}
+.year__semester__course:hover .year__semester__course__btns {
+  opacity: 1;
+}
+
 .year:nth-child(odd) .year h1 {
   background: var(--primary-blue);
 }
@@ -282,6 +319,12 @@ main {
 }
 .footer__site__left {
   flex: 0 0 50%;
+}
+.footer__site__left__btn {
+  padding: 1em;
+  background: transparent;
+  border: transparent;
+  color: white;
 }
 .footer__site__left p strong {
   color: white;

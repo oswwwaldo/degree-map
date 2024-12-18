@@ -19,7 +19,7 @@
             <h2 contenteditable="true"> <span>Two year</span> degree map </h2>
         </div>
     </header>
-
+    
     <article class="intro">
         <h1> Welcome to the BMCC Academic Degree Map Builder </h1>
         <p> Academic degree maps outline course sequencing and provide students a visual roadmap whilst on their quest to 
@@ -34,13 +34,23 @@
 
     <!-- Conceptual -->
     <aside class="side-menu">
-        <ul>
+        <ul class="side-menu__list">
             <li> About this page </li>
+            <li> How to use this page </li>
         </ul>
         <header class="side-menu__header">
-            <h1> More options and resources </h1>
+            <h1> Settings </h1>
         </header> 
-        <ul>
+        <ul class="side-menu__list">
+            <li> <a href=""> Change degree </a> </li>
+            <li> <a href=""> Change year </a> </li>
+            <li> <a href=""> Change semester </a> </li>
+            <li> <a href=""> Change credits </a> </li>
+        </ul>
+        <header class="side-menu__header">
+            <h2> Resources offered </h2>
+        </header>   
+        <ul class="side-menu__list">            
             <li> Export as PDF <i class="fas fa-file"></i> </li>
             <li> Share with advisor <i class="fas fa-share-from-square"></i> </li>
             <li> <a href=""> Official Degree Maps </a> </li>
@@ -55,7 +65,7 @@
         <input type="text" 
                 class="course-menu__search-bar" 
                 id="search" 
-                onkeyup="fetchSearchResults(this)" 
+                onkeyup="fetchSearchResults()" 
                 placeholder="Search for a course..."> 
 
         <div class="course-menu__results" id="courses">
@@ -101,7 +111,7 @@
                 <h2 class="year__semester__header">
                     <span class="year__semester__header__bold"> Semester 1 </span> <span class="year__semester__header__light"> 3 Credits </span>
                </h2>
-                <div class="year__semester__course">
+                <div class="year__semester__course" draggable="true">
                     <div class="year__semester__course__code"> CSC 211 </div>
                     <div class="year__semester__course__title"> 
                         Advanced Programming Techniques 
@@ -109,8 +119,16 @@
                             3 Credits
                         </span>
                     </div>
+                    <div class="year__semester__course__btns">
+                        <button class="year__semester__course__btns__remove-btn" type="button"> 
+                            <i class="fas fa-trash"></i>
+                        </button>
+                        <button class="year__semester__course__btns__view-btn" type="button"> 
+                            <i class="fas fa-caret-down"></i>
+                        </button>
+                    </div>
                 </div>
-                <div class="year__semester__course">
+                <div class="year__semester__course" draggable="true">
                     <div class="year__semester__course__code"> CSC 211 </div>
                     <div class="year__semester__course__title"> 
                         Advanced Programming Techniques 
@@ -118,14 +136,30 @@
                             3 Credits
                         </span>
                     </div>
+                    <div class="year__semester__course__btns">
+                        <button class="year__semester__course__btns__remove-btn" type="button"> 
+                            <i class="fas fa-trash"></i>
+                        </button>
+                        <button class="year__semester__course__btns__view-btn" type="button"> 
+                            <i class="fas fa-caret-down"></i>
+                        </button>
+                    </div>
                 </div>
-                <div class="year__semester__course">
+                <div class="year__semester__course" draggable="true">
                     <div class="year__semester__course__code"> CSC 211 </div>
                     <div class="year__semester__course__title"> 
                         Advanced Programming Techniques 
                         <span class="year__semester__course__title__credits"> 
                             3 Credits
                         </span>
+                    </div>
+                    <div class="year__semester__course__btns">
+                        <button class="year__semester__course__btns__remove-btn" type="button"> 
+                            <i class="fas fa-trash"></i>
+                        </button>
+                        <button class="year__semester__course__btns__view-btn" type="button"> 
+                            <i class="fas fa-caret-down"></i>
+                        </button>
                     </div>
                 </div>
             </section> 
@@ -135,7 +169,7 @@
                     <span class="year__semester__header__bold"> Semester 1 </span> <span class="year__semester__header__light"> 3 Credits </span>
 
                </h2>
-                <div class="year__semester__course">
+                <div class="year__semester__course" draggable="true">
                     <div class="year__semester__course__code"> CSC 211 </div>
                     <div class="year__semester__course__title"> 
                         Advanced Programming Techniques 
@@ -143,8 +177,16 @@
                             3 Credits
                         </span>
                     </div>
+                    <div class="year__semester__course__btns">
+                        <button class="year__semester__course__btns__remove-btn" type="button"> 
+                            <i class="fas fa-trash"></i>
+                        </button>
+                        <button class="year__semester__course__btns__view-btn" type="button"> 
+                            <i class="fas fa-caret-down"></i>
+                        </button>
+                    </div>
                 </div>
-                <div class="year__semester__course">
+                <div class="year__semester__course" draggable="true">
                     <div class="year__semester__course__code"> CSC 211 </div>
                     <div class="year__semester__course__title"> 
                         Advanced Programming Techniques 
@@ -152,8 +194,16 @@
                             3 Credits
                         </span>
                     </div>
+                    <div class="year__semester__course__btns">
+                        <button class="year__semester__course__btns__remove-btn" type="button"> 
+                            <i class="fas fa-trash"></i>
+                        </button>
+                        <button class="year__semester__course__btns__view-btn" type="button"> 
+                            <i class="fas fa-caret-down"></i>
+                        </button>
+                    </div>
                 </div>
-                <div class="year__semester__course">
+                <div class="year__semester__course" draggable="true">
                     <div class="year__semester__course__code"> CSC 211 </div>
                     <div class="year__semester__course__title"> 
                         Advanced Programming Techniques 
@@ -161,14 +211,30 @@
                             3 Credits
                         </span>
                     </div>
+                    <div class="year__semester__course__btns">
+                        <button class="year__semester__course__btns__remove-btn" type="button"> 
+                            <i class="fas fa-trash"></i>
+                        </button>
+                        <button class="year__semester__course__btns__view-btn" type="button"> 
+                            <i class="fas fa-caret-down"></i>
+                        </button>
+                    </div>
                 </div>
-                <div class="year__semester__course">
+                <div class="year__semester__course" draggable="true">
                     <div class="year__semester__course__code"> CSC 211 </div>
                     <div class="year__semester__course__title"> 
                         Advanced Programming Techniques 
                         <span class="year__semester__course__title__credits"> 
                             3 Credits
                         </span>
+                    </div>
+                    <div class="year__semester__course__btns">
+                        <button class="year__semester__course__btns__remove-btn" type="button"> 
+                            <i class="fas fa-trash"></i>
+                        </button>
+                        <button class="year__semester__course__btns__view-btn" type="button"> 
+                            <i class="fas fa-caret-down"></i>
+                        </button>
                     </div>
                 </div>
             </section>
@@ -182,7 +248,7 @@
                 <h2 class="year__semester__header">
                     <span class="year__semester__header__bold"> Semester 1 </span> <span class="year__semester__header__light"> 3 Credits </span>
                </h2>
-                <div class="year__semester__course">
+                <div class="year__semester__course" draggable="true">
                     <div class="year__semester__course__code"> CSC 211 </div>
                     <div class="year__semester__course__title"> 
                         Advanced Programming Techniques 
@@ -190,9 +256,17 @@
                             3 Credits
                         </span>
                     </div>
+                    <div class="year__semester__course__btns">
+                        <button class="year__semester__course__btns__remove-btn" type="button"> 
+                            <i class="fas fa-trash"></i>
+                        </button>
+                        <button class="year__semester__course__btns__view-btn" type="button"> 
+                            <i class="fas fa-caret-down"></i>
+                        </button>
+                    </div>
                 </div>
 
-                <div class="year__semester__course">
+                <div class="year__semester__course" draggable="true">
                     <div class="year__semester__course__code"> CSC 211 </div>
                     <div class="year__semester__course__title"> 
                         Advanced Programming Techniques 
@@ -200,25 +274,49 @@
                             3 Credits
                         </span>
                     </div>
+                    <div class="year__semester__course__btns">
+                        <button class="year__semester__course__btns__remove-btn" type="button"> 
+                            <i class="fas fa-trash"></i>
+                        </button>
+                        <button class="year__semester__course__btns__view-btn" type="button"> 
+                            <i class="fas fa-caret-down"></i>
+                        </button>
+                    </div>
                 </div>
 
-                <div class="year__semester__course">
+                <div class="year__semester__course" draggable="true">
                     <div class="year__semester__course__code"> CSC 211 </div>
                     <div class="year__semester__course__title"> 
                         Advanced Programming Techniques 
                         <span class="year__semester__course__title__credits"> 
                             3 Credits
                         </span>
+                    </div>
+                    <div class="year__semester__course__btns">
+                        <button class="year__semester__course__btns__remove-btn" type="button"> 
+                            <i class="fas fa-trash"></i>
+                        </button>
+                        <button class="year__semester__course__btns__view-btn" type="button"> 
+                            <i class="fas fa-caret-down"></i>
+                        </button>
                     </div>
                 </div>
                 
-                <div class="year__semester__course">
+                <div class="year__semester__course" draggable="true">
                     <div class="year__semester__course__code"> CSC 211 </div>
                     <div class="year__semester__course__title"> 
                         Advanced Programming Techniques 
                         <span class="year__semester__course__title__credits"> 
                             3 Credits
                         </span>
+                    </div>
+                    <div class="year__semester__course__btns">
+                        <button class="year__semester__course__btns__remove-btn" type="button"> 
+                            <i class="fas fa-trash"></i>
+                        </button>
+                        <button class="year__semester__course__btns__view-btn" type="button"> 
+                            <i class="fas fa-caret-down"></i>
+                        </button>
                     </div>
                 </div>
             </section> 
@@ -227,7 +325,7 @@
                 <h2 class="year__semester__header">
                     <span class="year__semester__header__bold"> Semester 1 </span> <span class="year__semester__header__light"> 3 Credits </span>
                </h2>
-                <div class="year__semester__course">
+                <div class="year__semester__course" draggable="true">
                     <div class="year__semester__course__code"> CSC 211 </div>
                     <div class="year__semester__course__title"> 
                         Advanced Programming Techniques 
@@ -235,15 +333,31 @@
                             3 Credits
                         </span>
                     </div>
+                    <div class="year__semester__course__btns">
+                        <button class="year__semester__course__btns__remove-btn" type="button"> 
+                            <i class="fas fa-trash"></i>
+                        </button>
+                        <button class="year__semester__course__btns__view-btn" type="button"> 
+                            <i class="fas fa-caret-down"></i>
+                        </button>
+                    </div>
                 </div>
 
-                <div class="year__semester__course">
+                <div class="year__semester__course" draggable="true">
                     <div class="year__semester__course__code"> CSC 211 </div>
                     <div class="year__semester__course__title"> 
                         Advanced Programming Techniques 
                         <span class="year__semester__course__title__credits"> 
                             3 Credits
                         </span>
+                    </div>
+                    <div class="year__semester__course__btns">
+                        <button class="year__semester__course__btns__remove-btn" type="button"> 
+                            <i class="fas fa-trash"></i>
+                        </button>
+                        <button class="year__semester__course__btns__view-btn" type="button"> 
+                            <i class="fas fa-caret-down"></i>
+                        </button>
                     </div>
                 </div>
             </section> 
@@ -252,7 +366,7 @@
                 <h2 class="year__semester__header">
                     <span class="year__semester__header__bold"> Semester 1 </span> <span class="year__semester__header__light"> 3 Credits </span>
                </h2>
-                <div class="year__semester__course">
+                <div class="year__semester__course" draggable="true">
                     <div class="year__semester__course__code"> CSC 211 </div>
                     <div class="year__semester__course__title"> 
                         Advanced Programming Techniques 
@@ -260,9 +374,17 @@
                             3 Credits
                         </span>
                     </div>
+                    <div class="year__semester__course__btns">
+                        <button class="year__semester__course__btns__remove-btn" type="button"> 
+                            <i class="fas fa-trash"></i>
+                        </button>
+                        <button class="year__semester__course__btns__view-btn" type="button"> 
+                            <i class="fas fa-caret-down"></i>
+                        </button>
+                    </div>
                 </div>
 
-                <div class="year__semester__course">
+                <div class="year__semester__course" draggable="true">
                     <div class="year__semester__course__code"> CSC 211 </div>
                     <div class="year__semester__course__title"> 
                         Advanced Programming Techniques 
@@ -270,9 +392,17 @@
                             3 Credits
                         </span>
                     </div>
+                    <div class="year__semester__course__btns">
+                        <button class="year__semester__course__btns__remove-btn" type="button"> 
+                            <i class="fas fa-trash"></i>
+                        </button>
+                        <button class="year__semester__course__btns__view-btn" type="button"> 
+                            <i class="fas fa-caret-down"></i>
+                        </button>
+                    </div>
                 </div>
 
-                <div class="year__semester__course">
+                <div class="year__semester__course" draggable="true">
                     <div class="year__semester__course__code"> CSC 211 </div>
                     <div class="year__semester__course__title"> 
                         Advanced Programming Techniques 
@@ -280,22 +410,38 @@
                             3 Credits
                         </span>
                     </div>
+                    <div class="year__semester__course__btns">
+                        <button class="year__semester__course__btns__remove-btn" type="button"> 
+                            <i class="fas fa-trash"></i>
+                        </button>
+                        <button class="year__semester__course__btns__view-btn" type="button"> 
+                            <i class="fas fa-caret-down"></i>
+                        </button>
+                    </div>
                 </div>
 
-                <div class="year__semester__course">
+                <div class="year__semester__course" draggable="true">
                     <div class="year__semester__course__code"> CSC 211 </div>
                     <div class="year__semester__course__title"> 
                         Advanced Programming Techniques 
                         <span class="year__semester__course__title__credits"> 
                             3 Credits
                         </span>
+                    </div>
+                    <div class="year__semester__course__btns">
+                        <button class="year__semester__course__btns__remove-btn" type="button"> 
+                            <i class="fas fa-trash"></i>
+                        </button>
+                        <button class="year__semester__course__btns__view-btn" type="button"> 
+                            <i class="fas fa-caret-down"></i>
+                        </button>
                     </div>
                 </div>
             </section>  
             
         </section>
 
-        <div class="total-credits">
+        <div class="total-credits" id="totalCredits">
             <h1> Total: 60 Credits </h1>
         </div>
     </main>
@@ -308,8 +454,7 @@
             </h1>
             <ul class="footer__footnotes__list">
                 <li class="footer__footnotes__list__item"contenteditable="true"> ACC 122 is the prerequisite course to all ACC courses and it should be taken in the first semester. </li>
-                <li class="footer__footnotes__list__item"contenteditable="true"> MAT 206.5 is an alternative option. MAT 206.5 is a combination course of Intermediate Algebra and Trigonometry and Precalculus and will satisfy the 
-                    Mathematical & Quantitative Requirement. </li>
+                <li class="footer__footnotes__list__item"contenteditable="true"> MAT 206.5 is an alternative option. MAT 206.5 is a combination course of Intermediate Algebra and Trigonometry and Precalculus and will satisfy the Mathematical & Quantitative Requirement. </li>
                 <li class="footer__footnotes__list__item"contenteditable="true"> ECO 202 is an alternative option. MAT 206.5 is a prerequisite for this course.  </li>
                 <li class="footer__footnotes__list__item"contenteditable="true"> Please consult with an academic or faculty advisor.  </li>
             </ul>
@@ -318,7 +463,7 @@
 
         <div class="footer__site">
             <div class="footer__site__left">
-                <button class="footer__site__left__btn" onclick="revealDropdownContent(this)"> 
+                <button class="footer__site__left__btn dropdown-btn" onclick="revealDropdownContent(this)"> 
                     <p> 
                         <strong> 
                             Disclaimer: Not endoresd or affiliated with the Borough of Manhattan Community College. 

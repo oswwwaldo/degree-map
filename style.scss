@@ -58,6 +58,31 @@ body {
     }
 }
 
+.intro {
+    height: 1px;
+    opacity: 0;
+
+    transition: 500ms ease-in;
+    &:hover {
+        height: 100px;
+        opacity: 1;
+    }
+}
+.side-menu {
+    &__header {
+        padding: 1em;
+        font-size: 1.5em;
+        border-bottom: 2px solid var(--primary-blue);
+    }
+
+    &__list {
+        padding: 1em;
+        & li {
+            margin: 1em;
+        }
+    }
+}
+
 // @mixin course-template {
 //     display: flex;
 //     background: var(--odd-blue);
@@ -290,6 +315,25 @@ main {
             }
 
             &__credits {
+            }
+
+            &__btns {
+                display: flex;
+                flex-direction: row-reverse;
+                opacity: 0;
+                padding: 1em;
+
+                button {
+                    background: transparent;
+                    border: transparent;
+                    color: var(--primary-blue);
+                }
+            }
+
+            &:hover {
+                .year__semester__course__btns {
+                    opacity: 1;
+                }
             }
         }
     }
