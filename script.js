@@ -420,65 +420,49 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 
 
-    //! Problem. The issue is when we delete a course, the total is messed up. ===
     // Delete courses from the semester
     document.querySelectorAll(".year__semester__course__btns__remove-btn").forEach((btn) => {
-        btn.addEventListener("click", function() {
+        btn.addEventListener("click", function () {
             const semester = btn.closest(".year__semester");
             const course = btn.closest(".year__semester__course");
+
             course.remove();
             console.log("Course (" + course.id + ") removed from semester");
-            calculateCredits(semester);
+
+            calculateCredits(); // Recalculate all credits after removing a course
         });
     });
-
 });
 
 
 
 //TODO Function should also take an optional previousSemester parameter to calculate the credits for that semester too
 //TODO Function should take into account that other semesters have their own credits variables and not continually modify the global total 
-function calculateCredits(semester) {
+// Function to calculate the total and per-semester credits
+function calculateCredits() {
+    let totalCredits = 0; // Reset total credits
 
-    // If a semester is passed into the function, calculate the credits for that semester
-    if (semester) {
-        console.log("Semester is passed into calculateCredits()");
-        calculateSemesterCredits(semester);
+    // Iterate over each semester and calculate its credits
+    document.querySelectorAll(".year__semester").forEach((semester) => {
+        let semesterCredits = 0; // Reset semester credits
 
-        // Checks to see if semester still has courses left, if not then it will delete the semester
-        if (semesterCredits <= 0 ) {
-            window.alert("Semester has been deleted.");
-            semester.remove();
-        }
-
-        // Updates the total credits for the year
-        // document.getElementById("totalCredits").innerText = "Total: " + totalCredits + " Credits";
-    }
-
-    // If no semester is passed into the function, calculate the credits for all semesters
-    else if (!semester) {
-        console.log("No semester is passed into calculateCredits()");
-        totalCredits = 0; // Resets the total credits count
-
-        document.querySelectorAll(".year__semester").forEach((semester) => {
-            calculateSemesterCredits(semester);
-        });
-    }
-
-    function calculateSemesterCredits(semester) {
-        semesterCredits = 0; // Resets the semester credits count
-
+        // Calculate credits for each course in the semester
         semester.querySelectorAll(".year__semester__course").forEach((course) => {
             let courseCredits = parseInt(course.querySelector(".year__semester__course__title__credits").innerText);
-
-            semesterCredits += courseCredits; // Adds all of our course credits together
+            semesterCredits += courseCredits;
         });
 
-        console.log(semesterCredits + " is how many semesterCredits we have");
-        semester.querySelector(".year__semester__header__light").innerText = semesterCredits + " Credits";
+        // Update the semester's displayed credits
+        semester.querySelector(".year__semester__header__light").innerText = `${semesterCredits} Credits`;
 
-        totalCredits += semesterCredits; // Updates the total credits count
-        console.log(totalCredits + " is how many totalCredits we have");
-        document.getElementById("totalCredits").innerText = "Total: " + totalCredits + " Credits";
-    }
+        // Add the semester's credits to the total
+        totalCredits += semesterCredits;
+
+        // If semester has no courses left, remove it
+        if (semesterCredits === 0) 
+            semester.remove();
+    });
+
+    // Update the total's displayed credits
+    document.getElementById("totalCredits").innerText = `Total: ${totalCredits} Credits`;
 }
