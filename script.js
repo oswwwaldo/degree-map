@@ -388,7 +388,7 @@ document.addEventListener("DOMContentLoaded", function() {
             console.log("Drag started for:", course.id);
         });
 
-        if (!course.id) {
+        if (!course.id) { // If the course does not have an ID, assign one
             course.id = `course-${index}`;
         }
     });    
@@ -416,9 +416,43 @@ document.addEventListener("DOMContentLoaded", function() {
             calculateCredits(semester);
         });
 
-        //TODO Add out of bounds drop functionality for courses that are dropped outside of the semester element
     });
 
+    //TODO Add special styling to indicate that the course is out of bounds and will be deleted if dropped
+    document.getElementById("selectedCourses").addEventListener('dragover', function(e) {
+        e.preventDefault();
+    
+        // Check if the event target or its parent is a semester element
+        const semester = e.target.closest(".year__semester");
+    
+        if (!semester) {
+            console.log("Kill zone - Out of bounds drop area");
+        } else {
+            console.log("Valid drop zone");
+        }
+    });
+
+    // Delete course if dragged and dropped outside of semester elements
+    document.getElementById("selectedCourses").addEventListener('drop', function(e) {
+        e.preventDefault();
+
+        // Check if the event target or its parent is a semester element
+        const semester = e.target.closest(".year__semester");
+
+        // Retrieve the course ID from the DataTransfer object
+        const courseId = e.dataTransfer.getData("text/plain");
+        const course = document.getElementById(courseId);
+
+        // If course exists and dragged over a non-semester element, remove course
+        if (course) {
+            if (!semester) {
+                course.remove();
+                console.log("Deleted:", courseId, "out of bounds");
+                calculateCredits(semester);
+            }
+        }
+    });
+    
 
     // Delete courses from the semester
     document.querySelectorAll(".year__semester__course__btns__remove-btn").forEach((btn) => {
