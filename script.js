@@ -355,39 +355,100 @@ function calculateMapYearRange() {
 let creditsMap = [];
 
 function parseSemesterData() {
+    let semesterName = null; // Name of the semester
     let semesterIndex = 0; // Tracks the index of semesters within the same year
     let currentYear = null; // Tracks the current year
 
-    // Clear the map before re-rendering just incase
+    // Clear the map before re-rendering just in case
     creditsMap = [];
 
-    // Iterate over each semester element
-    document.querySelectorAll(".year__semester").forEach((semester, index) => {
+    // Group semesters by year
+    const semestersByYear = new Map();
 
-        // Get the number of credits from the light header
-        let credits = parseInt(semester.querySelector(".year__semester__header__light").innerText) || 0;
-
+    document.querySelectorAll(".year__semester").forEach((semester) => {
         // Retrieve the year by traversing to the closest `.year` and fetching its header
         let yearSection = semester.closest(".year");
-        let yearHeaderText = yearSection.querySelector(".year__header").innerText;	
+        let yearHeaderText = yearSection.querySelector(".year__header").innerText;
         let year = yearHeaderText.split(" ")[1]; // Extracts the numeric year part from the string
 
-        // If the year changes, reset the semester index
-        if (year !== currentYear) {
-            currentYear = year;
-            semesterIndex = 0;
+        // Add semester to the corresponding year group
+        if (!semestersByYear.has(year)) {
+            semestersByYear.set(year, []);
         }
+        semestersByYear.get(year).push(semester);
+    });
 
-        // Increment semester index to track the semester's position within the year
-        semesterIndex++;
+    console.log(semestersByYear);
 
-        // Add the semester data to the map
-        creditsMap.push({
-            element: semester,        // Reference to the semester element
-            credits: credits,         // Number of credits for this semester
-            semesterIndex: semesterIndex, // Semester's position within the current year
-            year: year,               // Year of the semester
-            totalIndex: index + 1     // Overall position across all semesters
+    // Iterate over grouped semesters
+    semestersByYear.forEach((semesters, year) => {
+        // Get the total number of semesters for this year
+        const totalSemesters = semesters.length;
+
+        // Reset semesterIndex for the new year
+        semesterIndex = 0;
+
+        // Step 3: Process each semester within the year
+        semesters.forEach((semester) => {
+            // Increment semester index
+            semesterIndex++;
+
+            // Get the number of credits from the light header
+            let credits = parseInt(semester.querySelector(".year__semester__header__light").innerText) || 0;
+
+            // Decide semester name based on the totalSemesters for this year
+            switch (semesterIndex) {
+                // If two semesters, use Fall and Spring
+                // If three semesters, use Fall, Spring, and Summer
+                // If four semesters, use Fall, Winter, Spring, and Summer
+                case 1:
+                    semesterName = "Fall";
+                    if (credits > 18) {
+                        console.log("Fall semester cannot exceed 18 credits");
+                    }
+                    break;
+                case 2:
+                    semesterName = totalSemesters < 4 ? "Spring" : "Winter";
+                    if (semesterName === "Spring" && credits > 18) {
+                        console.log("Spring semester cannot exceed 18 credits");
+                    }
+                    else if (semesterName === "Winter" && credits > 4) {
+                        console.log("Winter semester cannot exceed 4 credits");
+                    } 
+                    break;
+                case 3:
+                    semesterName = totalSemesters === 3 ? "Summer" : "Spring";
+                    if (semesterName === "Summer" && credits > 16) {
+                        console.log("Summer semester cannot exceed 18 credits");
+                    }
+                    else if (semesterName === "Spring" && credits > 18) {
+                        console.log("Spring semester cannot exceed 18 credits");
+                    } 
+                    break;
+                case 4:
+                    semesterName = "Summer";
+                    if (credits > 16) {
+                        console.log("Summer semester cannot exceed 16 credits");
+                    }
+                    break;
+                default:
+                    semesterName = "Unknown";
+                    console.log("Default case reached");
+                    break;
+            }
+
+            // Update the semester header text
+            semester.querySelector(".year__semester__header__bold").innerText = semesterName;
+
+            // Add the semester data to the map
+            creditsMap.push({
+                element: semester,                  // Reference to the semester element
+                credits: credits,                   // Number of credits for this semester
+                semester: semesterName,             // Name of the semester
+                semesterIndex: semesterIndex,       // Semester's position within the current year
+                year: year,                         // Year of the semester
+                totalIndex: creditsMap.length + 1,  // Overall position across all semesters
+            });
         });
     });
 
