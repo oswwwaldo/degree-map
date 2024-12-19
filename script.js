@@ -77,7 +77,10 @@ function storeData(db, data) {
         const store = transaction.objectStore("items");
 
         // Iterates through the data and stores each item into our database
-        data.forEach(item => { store.put(item); console.log("Stored item:", item); });
+        data.forEach(item => { 
+            store.put(item); 
+            // console.log("Stored item:", item); 
+        });
 
         transaction.oncomplete = () => {
             resolve("Data stored successfully");
@@ -343,43 +346,58 @@ function calculateMapYearRange() {
     let yearRange = document.getElementById("yearRange").innerText;
 }
 
+//TODO Function should dynamically calculate the credits for each semester and return the year range of expected completion
+//TODO Dynamically named semesters and years
+//TODO Dynamically create semester variable names and dynmaically name each semester based on their position in the index
+//TODO Create a map to store semester data
 
-
-
-
+// Map to store semester data for each year
 let creditsMap = [];
 
-//TODO Dynamically named semesters and years
-document.addEventListener("DOMContentLoaded", function() {
+function parseSemesterData() {
+    let semesterIndex = 0; // Tracks the index of semesters within the same year
+    let currentYear = null; // Tracks the current year
 
-    //TODO Dynamically create semester variable names and dynmaically name each semester based on their position in the index
-    // Create a map to store semester data
+    // Clear the map before re-rendering just incase
+    creditsMap = [];
 
-    // Select all semester elements
+    // Iterate over each semester element
     document.querySelectorAll(".year__semester").forEach((semester, index) => {
 
-        // Get the number of credits
-        let innerTextStr = semester.querySelector(".year__semester__header__light").innerText;
-        let credits = parseInt(innerTextStr) || 0;
+        // Get the number of credits from the light header
+        let credits = parseInt(semester.querySelector(".year__semester__header__light").innerText) || 0;
 
-        // Get the semester's position (assuming the semester name is stored as class or text)
-        // let semesterPosition = semester.querySelector(".semester-position").innerText || "Unknown";  // Adjust selector
+        // Retrieve the year by traversing to the closest `.year` and fetching its header
+        let yearSection = semester.closest(".year");
+        let yearHeaderText = yearSection.querySelector(".year__header").innerText;	
+        let year = yearHeaderText.split(" ")[1]; // Extracts the numeric year part from the string
 
-        // Get the year of the semester (assuming it's a parent container or specific element)
-        let semesterYear = semester.querySelector(".semester-year") ? 
-                        semester.querySelector(".semester-year").innerText : "Unknown";  // Adjust selector
+        // If the year changes, reset the semester index
+        if (year !== currentYear) {
+            currentYear = year;
+            semesterIndex = 0;
+        }
 
-        // Push this information to the map
+        // Increment semester index to track the semester's position within the year
+        semesterIndex++;
+
+        // Add the semester data to the map
         creditsMap.push({
-            element: semester,
-            credits: credits,
-            // position: semesterPosition,
-            year: semesterYear,
-            semesterIndex: index + 1 // Position in the year (1 for first semester, 2 for second, etc.)
+            element: semester,        // Reference to the semester element
+            credits: credits,         // Number of credits for this semester
+            semesterIndex: semesterIndex, // Semester's position within the current year
+            year: year,               // Year of the semester
+            totalIndex: index + 1     // Overall position across all semesters
         });
     });
 
-    console.log(creditsMap);
+    // Log the resulting map
+    console.log("Parsed Semester Data:", creditsMap);
+}
+
+
+
+document.addEventListener("DOMContentLoaded", function() {
     
     // Adds drag and drop for courses in between semesters using dynamically generated IDs and the dataTransfer object 
     document.querySelectorAll(".year__semester__course").forEach((course, index) => {
@@ -466,6 +484,7 @@ document.addEventListener("DOMContentLoaded", function() {
             calculateCredits(); // Recalculate all credits after removing a course
         });
     });
+
 });
 
 
@@ -499,4 +518,6 @@ function calculateCredits() {
 
     // Update the total's displayed credits
     document.getElementById("totalCredits").innerText = `Total: ${totalCredits} Credits`;
+
+    parseSemesterData(); // Parse the semester data after calculating credits to update results
 }
