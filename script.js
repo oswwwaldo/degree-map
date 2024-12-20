@@ -1,4 +1,40 @@
 
+//! BMCC Degree Map Builder - script.js !//
+/*
+ & === TABLE OF CONTENTS ===
+ &  CSS styling and responsiveness
+    &  Guided tutorial and tooltips
+    &  Loading spinner animation
+    &  Paw trails vector graphic and animation
+
+ &  Adjust year-range dropdown and update the map
+
+ &  Render the menu with courses, add click functionality and pagination for results
+ &  Render the map, parse the available data and dynamically update year range and credits
+    &  Add a new semester block
+    &  Remove a semester block
+    &  Insert a custom block
+        & CLEP, AP, and other test credits
+        & Job experience and other non-traditional credits
+        & Internship block
+    &  viewCourse modal function
+ & Save map to local storage
+
+ &  Optimization
+ &  Footnotes and references
+
+ &  Change colleges future update modal
+ &  Dynamically load degree maps and parse data into the map as preset options
+    & If this happens, footnotes and references should also be parsed and displayed
+ &  Export map as a PDF
+    &  Save map as a PNG image
+
+ &  Dynamically load schedule builder pdf and export .ics file for calendar apps
+
+ &  Upgrade bmcc-courses.json database to a more complete version
+    &  Web scraping with Kevin Lu's idea
+*/
+
 // BMCC Degree Map Builder - script.js //
 
 // === TABLE OF CONTENTS ===                                            //
@@ -152,36 +188,7 @@ function renderMenu(courses) {
             </div>`;
     });
 
-    // Keeps the data-attributes format
-    // courses.forEach((course) => {
-    //     courseList += `
-    //         <div class="course-menu__results__item" 
-    //             data-id="${course.id}" 
-    //             data-name="${course.name}" 
-    //             data-code="${course.code}" 
-    //             data-credits="${course.credits.creditHours.max}" 
-    //             data-departments="${course.departments}">
-
-    //             <div class="course-menu__results__item__code"> 
-    //                 ${course.code} 
-    //             </div>
-    //             <div class="course-menu__results__item__title"> 
-    //                 ${course.name}
-    //                 <span class="course-menu__results__item__title__credits"> 
-    //                     ${course.credits.creditHours.max} Credits
-    //                 </span>
-    //                 <button class="course-menu__results__item__btn" type="button">
-    //                     <i class="fab fa-plus"></i>
-    //                 </button>
-    //             </div>
-    //         </div>`;
-    // });
-
-    // Adds in our courses as HTML to 'course-menu__results' div, which is the main container for our courses
-   
     document.getElementById("courses").innerHTML = courseList;
-
-
 
     // Add event listeners for each button for click interactivity with a single event listener to the parent container
     document.getElementById("courses").addEventListener("click", function (event) {
@@ -298,13 +305,15 @@ function renderPaginationButtons(totalPages) {
 // let selectedCourses = [];
 // document.getElementById("selected-courses").innerHTML = "";
 
-let mapCourses = JSON.parse(localStorage.getItem("mapCourses")) || [];
+// let mapCourses = JSON.parse(localStorage.getItem("mapCourses")) || [];
+let mapCourses = [];
 let mapHTML = "";
 
 // Add item to cart
 function addToMap(course) {
 
     mapCourses.push(course);
+
     createToast(`Added ${course.longName} to the cart.`);
 
     mapHTML += `
@@ -320,7 +329,13 @@ function addToMap(course) {
         
     console.log(mapCourses);
 
-    document.getElementById("selectedCourses").innerHTML += mapHTML;
+    let element = document.createElement("div");
+    element.innerHTML = mapHTML;
+    document.getElementById("selectedCourses").appendChild(element);
+    console.log(element)
+
+
+    // document.getElementById("selectedCourses").innerHTML += mapHTML;
 }
 
 // Creates a toast message temporarily and then deletes after timeout
@@ -354,22 +369,60 @@ function calculateMapYearRange() {
 // Map to store semester data for each year
 let creditsMap = [];
 
+function createSemesterElement(semesterData) {
+    let semesterElement = document.createElement("div");
+    semesterElement.className = "year__semester";
+    semesterElement.innerHTML = `
+        <div class="year__semester__header">
+            <span class="year__semester__header__bold">Semester</span>
+            <span class="year__semester__header__light">0 Credits</span>
+        </div>
+        <div class="year__semester__courses"></div>
+    `;
+    return semesterElement;
+}
+
+// Calculates map year range based on the last semester's year and current date 
+function calculateMapYearRange() {
+    let defaultStartingYear = new Date().getFullYear();
+    let lastSemester = creditsMap[creditsMap.length - 1];
+    let endYear = defaultStartingYear + parseInt(lastSemester.year - 1);
+    
+    let yearRangeElement = document.getElementById("yearRange");
+    yearRangeElement.innerText = defaultStartingYear + " - " + endYear;
+
+    let yearAmountElement = document.getElementById("yearAmount");
+
+    //TODO If the number of semesters is odd, return the number of semesters instead plus the word "semester" ex: "Five semester"
+
+    yearAmountElement.innerText = convertNumToWord(endYear - defaultStartingYear + 1) + " year";
+
+    // let yearRangeVal = [];
+    return {
+        startYear: defaultStartingYear,
+        endYear: endYear
+    }
+}
+
+// TODO Update the semester headers with the correct semester years
 function parseSemesterData() {
     let semesterName = null; // Name of the semester
     let semesterIndex = 0; // Tracks the index of semesters within the same year
     let currentYear = null; // Tracks the current year
-
+    
     // Clear the map before re-rendering just in case
     creditsMap = [];
-
+    
     // Group semesters by year
     const semestersByYear = new Map();
-
+    
     document.querySelectorAll(".year__semester").forEach((semester) => {
         // Retrieve the year by traversing to the closest `.year` and fetching its header
         let yearSection = semester.closest(".year");
         let yearHeaderText = yearSection.querySelector(".year__header").innerText;
         let year = yearHeaderText.split(" ")[1]; // Extracts the numeric year part from the string
+        
+        let semesterYear = null; // Tracks the year of the semester
 
         // Add semester to the corresponding year group
         if (!semestersByYear.has(year)) {
@@ -382,13 +435,12 @@ function parseSemesterData() {
 
     // Iterate over grouped semesters
     semestersByYear.forEach((semesters, year) => {
-        // Get the total number of semesters for this year
         const totalSemesters = semesters.length;
 
         // Reset semesterIndex for the new year
         semesterIndex = 0;
 
-        // Step 3: Process each semester within the year
+        // Process each semester within the year
         semesters.forEach((semester) => {
             // Increment semester index
             semesterIndex++;
@@ -437,6 +489,8 @@ function parseSemesterData() {
                     break;
             }
 
+            // semesterName += " " + semesterYear; // Append the year to the semester name
+
             // Update the semester header text
             semester.querySelector(".year__semester__header__bold").innerText = semesterName;
 
@@ -454,6 +508,7 @@ function parseSemesterData() {
 
     // Log the resulting map
     console.log("Parsed Semester Data:", creditsMap);
+    calculateMapYearRange();
 }
 
 
@@ -581,4 +636,24 @@ function calculateCredits() {
     document.getElementById("totalCredits").innerText = `Total: ${totalCredits} Credits`;
 
     parseSemesterData(); // Parse the semester data after calculating credits to update results
+}
+
+
+// Function to convert a number to its word representation
+function convertNumToWord(num) {
+    const numberNames = {
+      0: "zero",
+      1: "one",
+      2: "two",
+      3: "three",
+      4: "four",
+      5: "five",
+      6: "six",
+      7: "seven",
+      8: "eight",
+      9: "nine",
+      10: "ten",
+    };
+  
+    return numberNames[num] || "Number out of range";  // Handle undefined numbers
 }
