@@ -56,16 +56,43 @@ body {
   opacity: 1;
 }
 
+.side-menu {
+  width: 15%;
+  font-family: "Open Sans";
+  font-size: 0.8em;
+}
 .side-menu__header {
-  padding: 1em;
+  padding: 0 0 20px;
+  font-size: 1.2em;
+  line-height: 1.2em;
+}
+.side-menu__header:first-of-type {
+  border-bottom: 7px solid #0058A4;
   font-size: 1.5em;
-  border-bottom: 2px solid var(--primary-blue);
+  font-weight: bold;
+  letter-spacing: 1px;
 }
 .side-menu__list {
-  padding: 1em;
+  padding: 1em 0;
 }
 .side-menu__list li {
-  margin: 1em;
+  display: flex;
+  flex-flow: row nowrap;
+  padding: 8px 0px 8px 2px;
+  border-bottom: 1px solid #999;
+  line-height: 18px;
+}
+.side-menu__list li i {
+  margin-right: 5px;
+}
+.side-menu__list li a {
+  text-decoration: none;
+}
+.side-menu__list li a:hover {
+  text-decoration: underline;
+}
+.side-menu__list li a:visited {
+  color: black;
 }
 
 .course-menu {
